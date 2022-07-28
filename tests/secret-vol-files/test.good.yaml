@@ -1,0 +1,2 @@
+/etc/secrets/bar=${{ secrets.DEPLOY_CF_SECRET_VERSION_REF }}
+/etc/secrets/baz=${{ secrets.DEPLOY_CF_SECRET_REF }}

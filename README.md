@@ -113,6 +113,8 @@ jobs:
 
     All existing secrets will be removed, even if this parameter is not passed.
 
+- `secret_environment_variables_file`: (Optional) Path to a local YAML file with definitions for all secrets. An example secret_environment_variables_file can be found [here](tests/secret-env-var-files/test.good.yaml). All existing secrets will be removed, even if this parameter is not passed. If `secret_environment_variables` is also given, values in `secret_environment_variables` take precendence over these values.
+
 - `secret_volumes`: (Optional) List of key-value pairs to mount as volumes at
   runtime of the format "PATH=SECRET_VERSION_REF" where PATH is the mount path
   inside the container (e.g. "/etc/secrets/my-secret") and SECRET_VERSION_REF is
@@ -129,6 +131,8 @@ jobs:
 
     All existing secret volume mounts will be removed, even if this parameter is
     not passed.
+
+- `secret_volumes_file`: (Optional) Path to a local YAML file with definitions for all secret volume mounts. An example secret_volumes_file can be found [here](tests/secret-vol-files/test.good.yaml). All existing secret volume mounts will be removed, even if this parameter is not passed. If `secret_volumes` is also given, values in `secret_volumes` take precendence over these values.
 
 - `service_account_email`: (Optional) The email address of the Google Cloud
   service account to use as the runtime service account for the function. If

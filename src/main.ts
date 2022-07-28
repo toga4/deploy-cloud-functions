@@ -74,8 +74,10 @@ async function run(): Promise<void> {
     const buildEnvVarsFile = presence(getInput('build_environment_variables_file'));
     const buildWorkerPool = presence(getInput('build_worker_pool'));
 
-    const secretEnvVars = parseKVString(getInput('secret_environment_variables'));
-    const secretVols = parseKVString(getInput('secret_volumes'));
+    const secretEnvVars = presence(getInput('secret_environment_variables'));
+    const secretEnvVarsFile = presence(getInput('secret_environment_variables_file'));
+    const secretVols = presence(getInput('secret_volumes'));
+    const secretVolsFile = presence(getInput('secret_volumes_file'));
 
     const dockerRegistry = presence(toEnum(getInput('docker_registry')));
     const dockerRepository = presence(getInput('docker_repository'));
@@ -143,38 +145,36 @@ async function run(): Promise<void> {
 
     // Build secret environment variables.
     const secretEnvironmentVariables: SecretEnvVar[] = [];
-    if (secretEnvVars) {
-      for (const [key, value] of Object.entries(secretEnvVars)) {
-        const secretRef = new SecretName(value);
-        secretEnvironmentVariables.push({
-          key: key,
-          projectId: secretRef.project,
-          secret: secretRef.name,
-          version: secretRef.version,
-        });
-      }
+    for (const [key, value] of Object.entries(
+      parseKVStringAndFile(secretEnvVars, secretEnvVarsFile),
+    )) {
+      const secretRef = new SecretName(value);
+      secretEnvironmentVariables.push({
+        key: key,
+        projectId: secretRef.project,
+        secret: secretRef.name,
+        version: secretRef.version,
+      });
     }
 
     // Build secret volumes.
     const secretVolumes: SecretVolume[] = [];
-    if (secretVols) {
-      for (const [key, value] of Object.entries(secretVols)) {
-        const mountPath = posix.dirname(key);
-        const pth = posix.basename(key);
+    for (const [key, value] of Object.entries(parseKVStringAndFile(secretVols, secretVolsFile))) {
+      const mountPath = posix.dirname(key);
+      const pth = posix.basename(key);
 
-        const secretRef = new SecretName(value);
-        secretVolumes.push({
-          mountPath: mountPath,
-          projectId: secretRef.project,
-          secret: secretRef.name,
-          versions: [
-            {
-              path: pth,
-              version: secretRef.version,
-            },
-          ],
-        });
-      }
+      const secretRef = new SecretName(value);
+      secretVolumes.push({
+        mountPath: mountPath,
+        projectId: secretRef.project,
+        secret: secretRef.name,
+        versions: [
+          {
+            path: pth,
+            version: secretRef.version,
+          },
+        ],
+      });
     }
 
     // Create Cloud Functions client

@@ -108,6 +108,10 @@ inputs:
       will default to "latest".
     required: false
 
+  secret_environment_variables_file:
+    description: Path to a local YAML file with definitions for all secrets. If `secret_environment_variables` is also given, values in `secret_environment_variables` take precendence over these values.
+    required: false
+
   secret_volumes:
     description: |-
       List of key-value pairs to mount as volumes at runtime of the format
@@ -117,6 +121,10 @@ inputs:
       "projects/p/secrets/s/versions/v". If the project is omitted, it will be
       inferred from the Cloud Function project ID. If the version is omitted, it
       will default to "latest".
+    required: false
+
+  secret_volumes_file:
+    description: Path to a local YAML file with definitions for all secret volume mounts. If `secret_volumes` is also given, values in `secret_volumes` take precendence over these values.
     required: false
 
   service_account_email:

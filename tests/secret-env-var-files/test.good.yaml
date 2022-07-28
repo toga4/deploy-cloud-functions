@@ -1,0 +1,2 @@
+KEY1=${{ secrets.DEPLOY_CF_SECRET_VERSION_REF }}
+KEY2=${{ secrets.DEPLOY_CF_SECRET_REF }}
